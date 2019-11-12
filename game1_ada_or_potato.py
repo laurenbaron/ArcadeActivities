@@ -1,6 +1,4 @@
 import arcade
-import random
-
 
 
 # Define constants
@@ -35,12 +33,8 @@ class AlternatingImages(arcade.Sprite):
             self.timer = 0
             self.switch_image()
 
-    def update_angle(self):
-        self.angle = 0
-
     def update(self):
         self.update_timer()
-        self.update_angle()
 
     def switch_image(self):
         if self.texture==IMAGE_ADA:
@@ -52,6 +46,7 @@ class AlternatingImages(arcade.Sprite):
 
 
 class AdaOrPotato(arcade.Window):
+    logo_list: []
     points: int
 
     def __init__(self):
