@@ -44,39 +44,50 @@ class AlternatingImages(arcade.Sprite):
             self.texture=IMAGE_ADA
             self.phase='ada'
 
+    def current_value(self):
+        if self.texture=="IMAGE_ADA":
+            return 1
+        else:
+            return -1
+
 
 class AdaOrPotato(arcade.Window):
-    logo_list: []
+    sprite_list: []
     points: int
 
     def __init__(self):
         """ Initialize variables """
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
-        self.logo_list = None
-        self.points=0
+        self.sprite_list = None
+        self.points=None
 
     def setup(self):
         """ Setup the game (or reset the game) """
+        self.points=0 #still initialize here so you can reset without calling constructor again
         arcade.set_background_color(BACKGROUND_COLOR)
-        self.logo_list = arcade.SpriteList()
-        self.logo_list.append(AlternatingImages())
+        self.sprite_list = arcade.SpriteList()
+        self.sprite_list.append(AlternatingImages())
 
     def on_draw(self):
         """ Called when it is time to draw the world """
         arcade.start_render()
-        self.logo_list.draw()
-        output = f"Score: {self.points}"
-        arcade.draw_text(output, 10, 50, arcade.color.WHITE, 13)
+        self.sprite_list.draw()
+        arcade.draw_text(str(self.points), 10, 50, arcade.color.WHITE, 20)
 
     def on_update(self, delta_time):
         """ Called every frame of the game (1/GAME_SPEED times per second)"""
-        self.logo_list.update()
+        self.sprite_list.update()
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
-        if self.logo_list[0].phase == "ada":
+
+        if self.sprite_list[0].phase == "ada":
             self.points += 1
         else:
             self.points -= 1
+
+        for sprite in self.sprite_list:
+            if sprite.collides_with_point([x,y]):
+                self.points+=sprite.get_current_value()
 
 def main():
     window = AdaOrPotato()
